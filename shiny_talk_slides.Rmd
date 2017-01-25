@@ -1,0 +1,328 @@
+---
+title: "Wie schreibt man eine Shiny-App"
+author: "Andreas Kitsche (andreas.kitsche@kws.com)"
+date: "26. Januar 2017"
+output:
+  ioslides_presentation:
+    incremental: no
+    slideNumber: yes
+  beamer_presentation:
+    incremental: no
+    toc: yes
+  revealjs::revealjs_presentation:
+    highlight: haddock
+    reveal_options:
+      previewLinks: yes
+      slideNumber: yes
+    self_contained: yes
+    theme: simple
+    transition: slide
+  slidy_presentation:
+    incremental: no
+subtitle: für schließende Statistiken?
+bibliography: References.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning=FALSE, error=FALSE, message = FALSE)
+```
+
+```{r, echo = FALSE}
+library(knitcitations)
+bib <- read.bibtex("References.bib")
+```
+
+# Einführung - Wie baue ich eine einfache Shiny Applikation
+
+## App Architektur
+
+Eine Shiny App besteht aus zwei Programmen: 
+
+eines zur Definition der Benutzeroberfläche (`ui.r`) 
+
+```{r chunck_01, eval=FALSE, echo=TRUE, results='hide'}
+library(shiny)
+# Define UI for application
+ui <- fluidPage()
+```
+
+und ein zweites in dem die Analyse mit
+R stattfindet (`server.r`) 
+
+```{r chunck_02, eval=FALSE, echo=TRUE, results='hide'}
+# Define server logic
+server <- function(input, output) {}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+## App Architektur
+
+![](figures/shiny_01.png)
+
+## Erstellung der Benutzeroberfläche
+
+Elemente für die Benutzeroberfläche werden als Argumente der Funktion `fluidPage()` übergeben
+
+```{r chunck_03, eval=FALSE, echo=TRUE, results='hide'}
+# Define UI for application
+ui <- fluidPage("Hello world")
+```
+
+Shiny generiert automatisch das *html* file zum Aufbau der Benutzeroberfläche:
+
+```
+<div class="container-fluid">Hello world</div>
+```
+
+## Ein- und Ausgabewerte einfügen
+
+Elemente für die Applikation werden als Argumente der Funktion `fluidPage()` übergeben
+
+```{r chunck_04, eval=FALSE, echo=TRUE, results='hide'}
+# Define UI for application
+ui <- fluidPage(
+  # *Input() functions,
+  # *Output() functions
+)
+```
+
+# Inputs
+
+## Inputs
+
+Eingabewerte werden mit Hilfe der `*Input()` Funktion gebaut, z.B.
+
+```{r chunck_05, eval=FALSE, echo=TRUE, results='markup'}
+# Define UI for application
+ui <- fluidPage(
+  sliderInput(inputId = "num_slider_id",
+              label = "Choose a number",
+              value = 25, min = 1, max = 100)
+)
+```
+
+```
+<div class="form-group shiny-input-container">
+  <label class="control-label" for="num_slider_id">Choose a number</label>
+  <input class="js-range-slider" id="num_slider_id" data-min="1" data-max="100"
+  data-from="25" data-step="1" data-grid="true" data-grid-num="9.9"
+  data-grid-snap="false" data-keyboard="true" data-keyboard-step="1.01010101010101"
+  data-drag-interval="true" data-data-type="number" data-prettify-separator=","/>
+</div>
+```
+
+##
+
+![](figures/shiny_02.png)
+
+# Outputs
+
+## Outputs
+
+Ausgabewerte werden mit Hilfe der `*Output()` Funktion gebaut, z.B.
+
+```{r chunck_06, eval=FALSE, echo=TRUE, results='markup'}
+# Define UI for application
+ui <- fluidPage(
+  plotOutput(outputId = "plot_id",
+             width = "100%", 
+             height = "400px")
+)
+```
+
+Das eigentliche plot Objekt wird in der Server Funktion generiert!
+
+## Outputs
+
+Funktion  | fügt ein:
+------------- | -------------
+dataTableOutput()  | interaktive Tabelle
+htmlOutput()  | HTML
+imageOutput() | Bild
+plotOutput()  | Plot
+tableOutput() | statische Tabelle
+textOutput()  | Text
+uiOutput()   | Shiny UI Elemment
+verbatimTextOutput() | Text
+
+# Erstellung des server.r Programms
+
+## Erstellung des server.r Programms
+
+Das `server.r` Programm beherbergt eine Funktion mit Anleitungen, wie die R-Objekte für die Benutzeroberfläche erstellt und aktualisiert werden sollen
+
+```{r chunck_07, eval=FALSE, echo=TRUE, results='markup'}
+# Define server logic
+server <- function(input, output) {
+  
+}
+```
+
+Drei Regeln sind bei der Erstellung der `server` Funktion zu beachten:
+
+1. Speichern der auszugebenen Objekte in `output$`
+2. Erstellen der auszugebenen Objekte mit der `render*()` Funktion
+3. Ansteuern von Eingabewerten mit Hilfe von `input$`
+
+## Auszugebene Objekte werden in `output$` gespeichert {.smaller}
+
+```{r chunck_08, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+# Define UI for application
+ui <- fluidPage(
+  "Iris data set",
+  plotOutput(outputId = "iris_scatterplot")
+)
+# Define server logic
+server <- function(input, output) {
+  
+  output$iris_scatterplot <- # some code ...
+  })
+}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+## Erstellen der auszugebenen Objekte mit der `render*()` Funktion {.smaller}
+
+```{r chunck_09, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+library(ggplot2)
+# Define UI for application
+ui <- fluidPage(
+  "Iris data set",
+  plotOutput(outputId = "iris_scatterplot")
+)
+# Define server logic
+server <- function(input, output) {
+  output$iris_scatterplot <- renderPlot({
+    p <- ggplot(data = iris, aes(x = Sepal.Length, y = Sepal.Width))
+    p + geom_point(aes(color = Species))
+  })
+}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+## Erstellen der auszugebenen Objekte mit der `render*()` Funktion {.smaller}
+
+Man wähle eine `render*()` Funktion, welche den gewünschten Output-Typ erstellt
+
+Funktion  | erstellt:
+------------- | -------------
+renderDataTable()  | interaktive Tabelle
+renderImage()  | Bild (als Link zu einem source file)
+renderPlot() | Plot
+renderPrint()| Codeblock aus geprintetem output
+renderTable() | statische Tabelle
+renderText() | charcter string
+renderUI()   | Shiny UI Element
+
+innerhalb der `render*()` Funktion befindet sich der Code zur Erstellung des Objektes
+
+
+## Eingabewerten werden mit `input$` angesteuert {.smaller}
+
+```{r chunck_10, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+library(ggplot2)
+# Define UI for application
+ui <- fluidPage(
+  "Iris data set",
+  selectInput(inputId = "input_x_variable", 
+              label = "X Variable", 
+              choices = colnames(iris), 
+              selected = colnames(iris)[1]),
+  selectInput(inputId = "input_y_variable", 
+              label = "Y Variable", 
+              choices = colnames(iris), 
+              selected = colnames(iris)[2]),
+  plotOutput(outputId = "iris_scatterplot")
+)
+# Define server logic
+server <- function(input, output) {
+  output$iris_scatterplot <- renderPlot({
+    p <- ggplot(data = iris, aes_string(x = input$input_x_variable,       
+                                        y = input$input_y_variable))
+    p + geom_point(aes(color = Species))
+  })
+}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+# Beispiele
+
+## Externe Datensätze hochladen {.smaller}
+
+```{r chunck_11, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+library(ggplot2)
+library(data.table)
+#write.csv(iris, "iris.csv", row.names = FALSE)
+#Define UI for application
+ui <- fluidPage(
+  "Externe Datensätze hochladen",
+  # Copy the line below to make a file upload manager
+  fileInput(inputId = "upload_file_id", label = "File input"),
+  #define a text output that displays the return of fileInput() function
+  verbatimTextOutput(outputId = "output_text_id"),
+  #define an interactive table of the uploaded data set
+  dataTableOutput(outputId = "output_table_id")
+)
+# Define server logic
+server <- function(input, output) {
+  # You can access the value of the fileInput() function with input$output_text_id
+  output$output_text_id <- renderPrint({
+    str(input$upload_file_id)
+  })
+  output$output_table_id <- renderDataTable({
+    if(is.null(input$upload_file_id)){return(NULL)}else{
+      uploaded_data <- fread(input$upload_file_id[1, 4])}
+  }, options = list(lengthChange = TRUE))
+}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+## Dateien (Tabellen, Grafiken) herunterladen
+
+```{r chunck_12, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+# Define UI for application
+ui <- fluidPage(
+  "Hello world",
+  selectInput(inputId = "select_data", 
+              label = "Select data set", 
+              choices = data(package = "datasets")$results[,3]),
+  dataTableOutput(outputId = "table_id"),
+  downloadButton(outputId = "download_id")
+  )
+# Define server logic
+server <- function(input, output) {
+  output$table_id <- renderDataTable({
+    as.data.frame(get(input$select_data))
+  })
+  
+  output$download_id <- downloadHandler(
+    filename = function(){ 
+      paste(input$select_data, '.csv', sep='') 
+    },
+    content = function(file){
+      write.csv(as.data.frame(get(input$select_data)), file)
+    }
+  )
+}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+
+# Wie baue ich reaktive Umgebungen
+
+# Die Benutzeroberfläche definieren
+
+# Bereitstellung der Shiny Applikation
+
+## References
