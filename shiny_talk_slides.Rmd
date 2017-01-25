@@ -4,6 +4,8 @@ author: "Andreas Kitsche (andreas.kitsche@kws.com)"
 date: "26. Januar 2017"
 output:
   ioslides_presentation:
+    highlight: haddock
+    theme: simple
     incremental: no
     slideNumber: yes
   beamer_presentation:
@@ -286,7 +288,7 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
-## Dateien (Tabellen, Grafiken) herunterladen
+## Dateien (Tabellen, Grafiken) herunterladen {.smaller}
 
 ```{r chunck_12, eval=FALSE, echo=TRUE, results='markup'}
 library(shiny)
@@ -318,10 +320,130 @@ server <- function(input, output) {
 shinyApp(ui = ui, server = server)
 ```
 
+## Dateien (Tabellen, Grafiken) herunterladen {.smaller}
 
 # Wie baue ich reaktive Umgebungen
 
+##
+
+Die Auswertugsroutine einzelner Funktionen wird durch den Ort ihrer Definition in der `server` Funktion bestimmt:
+
+
+```{r chunck_13, eval=FALSE, echo=TRUE, results='markup'} 
+library(shiny)
+
+1. some code ... 
+
+# Define UI for application
+ui <- fluidPage("Hello world")
+# Define server logic
+server <- function(input, output) {
+  
+  2. some code ...
+
+  outpit$* <- render*({
+    
+    3. some code ...
+    
+  })
+}
+shinyApp(ui = ui, server = server)
+```
+
+
 # Die Benutzeroberfläche definieren
+
+## Einbinden statischer Elemente `server` {.smaller}
+
+Innerhalb der `fluidPage()` Funktion kann statischer *html* Code eingebunden werden
+
+```{r chunck_14, eval=FALSE, echo=TRUE, results='markup'} 
+library(shiny)
+# Define UI for application
+ui <- fluidPage(
+  
+  HTML("
+    <h1>Ein Beispiel für Header</h1>
+    <p>Ein Beispiel für Paragraph</p>
+    ")
+
+)
+# Define server logic
+server <- function(input, output) {}
+shinyApp(ui = ui, server = server)
+```
+
+## Einbinden statischer Elemente `server` {.smaller}
+
+R shiny verfügt über eine große Banbreite von vordefinierten *HTML Builder Functions*
+
+```{r chunck_15, eval=FALSE, echo=TRUE, results='markup'} 
+library(shiny)
+# Define UI for application
+ui <- fluidPage(
+  #use tags
+  tags$p("Dies ist eine Beispiel", 
+         tags$a(href = "https://shiny.rstudio.com/", "Shiny"), 
+         "App."),
+  #use simple functions for constructing HTML documents
+  p("Es ist einfach GUI mit", 
+    a(href = "https://cran.r-project.org/", "R"),
+    code("Code"),
+    em("zu"),
+    strong("erstellen")) 
+)
+# Define server logic
+server <- function(input, output) {}
+shinyApp(ui = ui, server = server)
+```
+
+## Häufig verwendete *tags* Funktionen {.smaller}
+
+Funktion  | erstellt:
+------------- | -------------
+a()  | Hyperlink
+br()  | Zeilenumbruch
+code()| Formatiert Text wie Computercode
+em()  | kursiv
+h1(), h2(), ... | Überschriften
+hr()  | horizontale Linie
+img() | Bild
+p()   | Paragraf
+strog()| fett
+
+Siehe auch [Shiny HTML Tags Glossary](https://shiny.rstudio.com/articles/tag-glossary.html)
+
+## Organisation der *UI* Elemente `server` {.smaller}
+
+vordefinierte [Layout Funktionen](http://shiny.rstudio.com/articles/layout-guide.html) ermöglichen die Organisation der *UI* Elemente. Wir verwenden Panels um Gruppen con *UI* Elementen zu bilden
+
+```{r chunck_16, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+# Define UI for application
+ui <- fluidPage(
+  titlePanel(title = "Example App"),
+  sidebarLayout(
+    sidebarPanel(
+      *Input(),
+      *input(),
+      downloadButton()
+      ),
+    mainPanel(
+      *Output(),
+      *Output()
+    )
+  )
+)
+# Define server logic
+server <- function(input, output) {}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+
+##
+
+![](figures/shiny_03.png)
 
 # Bereitstellung der Shiny Applikation
 
