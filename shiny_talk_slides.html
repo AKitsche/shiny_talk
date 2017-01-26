@@ -663,6 +663,80 @@ server &lt;- function(input, output) { }
 
 shinyApp(ui, server)</pre>
 
+</article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Interaktive Grafiken einbinden</h2></hgroup><article  id="interaktive-grafiken-einbinden">
+
+</article></slide><slide class=''><hgroup><h2>Interaktive Grafiken einbinden</h2></hgroup><article  id="interaktive-grafiken-einbinden-1">
+
+<p>Interaktive Grafiken ermöglichen es zusätzliche Information zu Datenpunkten zur Verfügung zu stellen (mouse hover), Datenpunkte zu selektieren, oder Hyperlinks an Datenpunkte zu binden.</p>
+
+<p>Es stehen mehrere Ebenen zur Implementierung der interaktiver Grafiken zur Verfügung:</p>
+
+<ul>
+<li>Shinys eingebaute Funktionalität für R Standardplots (<code>plot()</code>) und <a href='http://ggplot2.org/' title=''>ggplot2</a></li>
+<li><a href='http://www.htmlwidgets.org/' title=''>htmlwidgets</a> JavaScript Visualisierungsbibliotheken</li>
+<li><a href='http://rstudio.github.io/crosstalk/' title=''>crosstalk</a> ermöglicht die Verbindung mehrerer <em>htmlwidgets</em></li>
+</ul>
+
+</article></slide><slide class=''><hgroup><h2>Einbinden von <em>htmlwidgets</em></h2></hgroup><article  id="einbinden-von-htmlwidgets" class="smaller">
+
+<pre class = 'prettyprint lang-r'>library(shiny)
+library(plotly)
+# Define UI for application
+ui &lt;- fluidPage(
+  &quot;Iris data set&quot;,
+  selectInput(inputId = &quot;input_x_variable&quot;, 
+              label = &quot;X Variable&quot;, 
+              choices = colnames(iris), 
+              selected = colnames(iris)[1], 
+              multiple = FALSE),
+  selectInput(inputId = &quot;input_y_variable&quot;, 
+              label = &quot;Y Variable&quot;, 
+              choices = colnames(iris), 
+              selected = colnames(iris)[2], 
+              multiple = FALSE),
+  plotlyOutput(outputId = &quot;iris_scatterplot&quot;)
+)
+# Define server logic
+server &lt;- function(input, output) {
+   output$iris_scatterplot &lt;- renderPlotly({
+    p &lt;- ggplot(data = iris, aes_string(x = input$input_x_variable,
+                                        y = input$input_y_variable))
+    p + geom_point(aes(color = Species))
+  })
+}
+# Run the application 
+shinyApp(ui = ui, server = server)</pre>
+
+</article></slide><slide class=''><hgroup><h2>Interaktive Plots mit basic plots und ggplot2</h2></hgroup><article  id="interaktive-plots-mit-basic-plots-und-ggplot2" class="smaller">
+
+<pre class = 'prettyprint lang-r'>library(shiny)
+library(plotly)
+# Define UI for application
+ui &lt;- fluidPage(
+  &quot;Iris data set&quot;,
+  selectInput(inputId = &quot;input_x_variable&quot;, 
+              label = &quot;X Variable&quot;, 
+              choices = colnames(iris), 
+              selected = colnames(iris)[1], 
+              multiple = FALSE),
+  selectInput(inputId = &quot;input_y_variable&quot;, 
+              label = &quot;Y Variable&quot;, 
+              choices = colnames(iris), 
+              selected = colnames(iris)[2], 
+              multiple = FALSE),
+  plotlyOutput(outputId = &quot;iris_scatterplot&quot;)
+)
+# Define server logic
+server &lt;- function(input, output) {
+   output$iris_scatterplot &lt;- renderPlotly({
+    p &lt;- ggplot(data = iris, aes_string(x = input$input_x_variable,
+                                        y = input$input_y_variable))
+    p + geom_point(aes(color = Species))
+  })
+}
+# Run the application 
+shinyApp(ui = ui, server = server)</pre>
+
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Bereitstellung der Shiny Applikation</h2></hgroup><article  id="bereitstellung-der-shiny-applikation">
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Erweiterungen</h2></hgroup><article  id="erweiterungen">

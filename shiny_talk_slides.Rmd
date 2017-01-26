@@ -556,6 +556,81 @@ server <- function(input, output) { }
 shinyApp(ui, server)
 ```
 
+# Interaktive Grafiken einbinden
+
+## Interaktive Grafiken einbinden
+
+Interaktive Grafiken ermöglichen es zusätzliche Information zu Datenpunkten zur Verfügung zu stellen (mouse hover), Datenpunkte zu selektieren, oder Hyperlinks an Datenpunkte zu binden.
+
+Es stehen mehrere Ebenen zur Implementierung der interaktiver Grafiken zur Verfügung:
+
+* Shinys eingebaute Funktionalität für R Standardplots (`plot()`) und  [ggplot2](http://ggplot2.org/)
+* [htmlwidgets](http://www.htmlwidgets.org/) JavaScript Visualisierungsbibliotheken
+* [crosstalk](http://rstudio.github.io/crosstalk/) ermöglicht die Verbindung mehrerer *htmlwidgets*
+
+## Einbinden von *htmlwidgets* {.smaller}
+
+```{r chunck_19, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+library(plotly)
+# Define UI for application
+ui <- fluidPage(
+  "Iris data set",
+  selectInput(inputId = "input_x_variable", 
+              label = "X Variable", 
+              choices = colnames(iris), 
+              selected = colnames(iris)[1], 
+              multiple = FALSE),
+  selectInput(inputId = "input_y_variable", 
+              label = "Y Variable", 
+              choices = colnames(iris), 
+              selected = colnames(iris)[2], 
+              multiple = FALSE),
+  plotlyOutput(outputId = "iris_scatterplot")
+)
+# Define server logic
+server <- function(input, output) {
+   output$iris_scatterplot <- renderPlotly({
+    p <- ggplot(data = iris, aes_string(x = input$input_x_variable,
+                                        y = input$input_y_variable))
+    p + geom_point(aes(color = Species))
+  })
+}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+## Interaktive Plots mit basic plots und ggplot2 {.smaller}
+
+```{r chunck_20, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+library(plotly)
+# Define UI for application
+ui <- fluidPage(
+  "Iris data set",
+  selectInput(inputId = "input_x_variable", 
+              label = "X Variable", 
+              choices = colnames(iris), 
+              selected = colnames(iris)[1], 
+              multiple = FALSE),
+  selectInput(inputId = "input_y_variable", 
+              label = "Y Variable", 
+              choices = colnames(iris), 
+              selected = colnames(iris)[2], 
+              multiple = FALSE),
+  plotlyOutput(outputId = "iris_scatterplot")
+)
+# Define server logic
+server <- function(input, output) {
+   output$iris_scatterplot <- renderPlotly({
+    p <- ggplot(data = iris, aes_string(x = input$input_x_variable,
+                                        y = input$input_y_variable))
+    p + geom_point(aes(color = Species))
+  })
+}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
 
 # Bereitstellung der Shiny Applikation
 
