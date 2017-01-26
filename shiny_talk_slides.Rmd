@@ -1,7 +1,7 @@
 ---
 title: "Wie schreibt man eine Shiny-App"
-author: "Andreas Kitsche (andreas.kitsche@kws.com)"
-date: "26. Januar 2017"
+author: "[Andreas Kitsche](andreas.kitsche@kws.com)"
+date: "26.01.2017"
 output:
   ioslides_presentation:
     highlight: haddock
@@ -322,7 +322,65 @@ shinyApp(ui = ui, server = server)
 
 ## Dateien (Tabellen, Grafiken) herunterladen {.smaller}
 
+```{r chunck_12b, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+# Define UI for application
+ui <- fluidPage(
+  "Hello world",
+  selectInput(inputId = "select_data", 
+              label = "Select data set", 
+              choices = data(package = "datasets")$results[,3]),
+  plotOutput(outputId = "download_plot_id"),
+  downloadButton(outputId = "download_id")
+  )
+# Define server logic
+server <- function(input, output) {
+  output$plot_id <- renderPlot({
+    data_tmp <- as.data.frame(get(input$select_data))
+    if(ncol(data_tmp) < 2){
+      return(NULL)
+    }else{
+      plot(data_tmp[,1:2])
+    }
+  })
+  output$download_plot_id <- downloadHandler(
+    
+    filename = function(){ 
+      paste(input$select_data, '.pdf', sep='') 
+    },
+    
+    content = function(file){
+      pdf(file)
+      plot(as.data.frame(get(input$select_data))[,1:2])
+      dev.off()
+    })
+  }
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+
 # Wie baue ich reaktive Umgebungen
+
+## Was ist Reaktivität?
+
+Shiny Applikationen beruhen im weitestgehend auf die zur Verfügungstellung von *input* Werten, Bereitstellung dieser in *R* und Rücksendung der evaluierten R Objekte als *output* zur Webseite.
+
+```
+input values => R Code => output values
+```
+
+## Was ist Reaktivität?
+
+Shiny verfügt über drei reaktive Programmierobjekte:
+
+* reactive source (**Reactive values**) - *input* Objekt (slider, text, numeric)
+* reactive conductor (**Reactive expressions**) - `reactive()` Funktion
+* reactive endpoint (**Observers**) - *output* Objekt (plot, table)
+
+![](figures/shiny_04.png)
+
+Ein *input* Objekt kann mit mehreren *output* Objekten verbundensein und umgekehrt.
 
 ##
 
@@ -332,18 +390,18 @@ Die Auswertugsroutine einzelner Funktionen wird durch den Ort ihrer Definition i
 ```{r chunck_13, eval=FALSE, echo=TRUE, results='markup'} 
 library(shiny)
 
-1. some code ... 
+1. some code ... run once when app is launched
 
 # Define UI for application
 ui <- fluidPage("Hello world")
 # Define server logic
 server <- function(input, output) {
   
-  2. some code ...
-
-  outpit$* <- render*({
+  2. some code ... run once each time a user visits the app
+  
+  output$* <- render*({
     
-    3. some code ...
+    3. some code ... run each time a user changes a widget that output$* relies on
     
   })
 }
@@ -353,7 +411,7 @@ shinyApp(ui = ui, server = server)
 
 # Die Benutzeroberfläche definieren
 
-## Einbinden statischer Elemente `server` {.smaller}
+## Einbinden statischer Elemente {.smaller}
 
 Innerhalb der `fluidPage()` Funktion kann statischer *html* Code eingebunden werden
 
@@ -373,7 +431,7 @@ server <- function(input, output) {}
 shinyApp(ui = ui, server = server)
 ```
 
-## Einbinden statischer Elemente `server` {.smaller}
+## Einbinden statischer Elemente {.smaller}
 
 R shiny verfügt über eine große Banbreite von vordefinierten *HTML Builder Functions*
 
@@ -413,9 +471,9 @@ strog()| fett
 
 Siehe auch [Shiny HTML Tags Glossary](https://shiny.rstudio.com/articles/tag-glossary.html)
 
-## Organisation der *UI* Elemente `server` {.smaller}
+## Organisation der *UI* Elemente {.smaller}
 
-vordefinierte [Layout Funktionen](http://shiny.rstudio.com/articles/layout-guide.html) ermöglichen die Organisation der *UI* Elemente. Wir verwenden Panels um Gruppen con *UI* Elementen zu bilden
+Vordefinierte [Layout Funktionen](http://shiny.rstudio.com/articles/layout-guide.html) ermöglichen die Organisation der *UI* Elemente. Wir verwenden Panels um Gruppen con *UI* Elementen zu bilden.
 
 ```{r chunck_16, eval=FALSE, echo=TRUE, results='markup'}
 library(shiny)
@@ -425,7 +483,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       *Input(),
-      *input(),
+      *Input(),
       downloadButton()
       ),
     mainPanel(
@@ -441,10 +499,91 @@ shinyApp(ui = ui, server = server)
 ```
 
 
+
 ##
 
 ![](figures/shiny_03.png)
 
+## Organisation der *UI* Elemente {.smaller}
+
+Die *UI* Elemente können in unterschiedlichen Tabs mit der Funktion `tabPanel()` definiert werden:
+
+```{r chunck_17, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+# Define UI for application
+ui <- fluidPage(
+  titlePanel(title = "Example App"),
+  sidebarLayout(
+    sidebarPanel(
+      *Input(),
+      *Input(),
+      downloadButton()
+      ),
+    mainPanel(
+      tabsetpanel(
+        tabPanel(
+          *Output()
+        ),
+        tabPanel(
+          *Output()
+        )
+      )
+    )
+  )
+)
+# Define server logic
+server <- function(input, output) {}
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+## Organisation der *UI* Elemente {.smaller}
+
+Eine Erweiterung zu den standard Shiny_layoutimplementierungen bietet das Paket `shinydashboard` an:
+
+```{r chunck_18, eval=FALSE, echo=TRUE, results='markup'}
+library(shiny)
+library(shinydashboard)
+
+ui <- dashboardPage(
+  dashboardHeader(),
+  dashboardSidebar(),
+  dashboardBody()
+)
+
+server <- function(input, output) { }
+
+shinyApp(ui, server)
+```
+
+
 # Bereitstellung der Shiny Applikation
 
+# Erweiterungen
+
+## Erweiterungen
+
+Diverse Pakete zur Erweiterung der shiny Grundfunktionalität stehen zur Verfügung:
+
+[shinydashboard](http://rstudio.github.io/shinydashboard/) - Dashboard Layout
+[Shiny Themes](http://rstudio.github.io/shinythemes/) - CSS themes
+[shinyjs](https://github.com/daattali/shinyjs/blob/master/README.md) - JavaScript actions
+[htmlwidgets](http://www.htmlwidgets.org/) - JavaScript Datenvisualisierungstools
+
+Weiterhin besteht die Möglichkeit:
+
+* Shiny Apps in [R Markdown](http://rmarkdown.rstudio.com/) Dokumente einzubinden, wie z.B.
+    + *ioslides* Präsentation
+    + *html* Dukumentation
+
 ## References
+
+* Chang, Winston, Joe Cheng, JJ Allaire, Yihui Xie, and Jonathan
+McPherson. 2016. Shiny: Web Application Framework
+for R. https://CRAN.R-project.org/package=shiny.
+
+* R Core Team. 2016. R: A Language and Environment for Statistical
+Computing. Vienna, Austria: R Foundation for
+Statistical Computing. https://www.R-project.org/.
+
+* http://shiny.rstudio.com/ 
