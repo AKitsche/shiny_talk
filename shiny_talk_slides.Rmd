@@ -364,7 +364,7 @@ shinyApp(ui = ui, server = server)
 
 ## Was ist Reaktivität?
 
-Shiny Applikationen beruhen im weitestgehend auf die zur Verfügungstellung von *input* Werten, Bereitstellung dieser in *R* und Rücksendung der evaluierten R Objekte als *output* zur Webseite.
+Shiny Applikationen beruhen weitestgehend auf die Zurverfügungstellung von *input* Werten, Bereitstellung dieser in *R* und Rücksendung der evaluierten R Objekte als *output* zur Webseite.
 
 ```
 input values => R Code => output values
@@ -380,7 +380,7 @@ Shiny verfügt über drei reaktive Programmierobjekte:
 
 ![](figures/shiny_04.png)
 
-Ein *input* Objekt kann mit mehreren *output* Objekten verbundensein und umgekehrt.
+Ein *input* Objekt kann mit mehreren *output* Objekten verbunden sein und umgekehrt.
 
 ##
 
@@ -467,13 +467,13 @@ h1(), h2(), ... | Überschriften
 hr()  | horizontale Linie
 img() | Bild
 p()   | Paragraf
-strog()| fett
+strong()| fett
 
 Siehe auch [Shiny HTML Tags Glossary](https://shiny.rstudio.com/articles/tag-glossary.html)
 
 ## Organisation der *UI* Elemente {.smaller}
 
-Vordefinierte [Layout Funktionen](http://shiny.rstudio.com/articles/layout-guide.html) ermöglichen die Organisation der *UI* Elemente. Wir verwenden Panels um Gruppen con *UI* Elementen zu bilden.
+Vordefinierte [Layout Funktionen](http://shiny.rstudio.com/articles/layout-guide.html) ermöglichen die Organisation der *UI* Elemente. Wir verwenden Panels um Gruppen von *UI* Elementen zu bilden.
 
 ```{r chunck_16, eval=FALSE, echo=TRUE, results='markup'}
 library(shiny)
@@ -539,7 +539,7 @@ shinyApp(ui = ui, server = server)
 
 ## Organisation der *UI* Elemente {.smaller}
 
-Eine Erweiterung zu den standard Shiny_layoutimplementierungen bietet das Paket `shinydashboard` an:
+Eine Erweiterung zu den standard Shiny-Layoutimplementierungen bietet das Paket `shinydashboard` an:
 
 ```{r chunck_18, eval=FALSE, echo=TRUE, results='markup'}
 library(shiny)
@@ -562,7 +562,7 @@ shinyApp(ui, server)
 
 Interaktive Grafiken ermöglichen es zusätzliche Information zu Datenpunkten zur Verfügung zu stellen (mouse hover), Datenpunkte zu selektieren, oder Hyperlinks an Datenpunkte zu binden.
 
-Es stehen mehrere Ebenen zur Implementierung der interaktiver Grafiken zur Verfügung:
+Es stehen mehrere Ebenen zur Implementierung interaktiver Grafiken zur Verfügung:
 
 * Shinys eingebaute Funktionalität für R Standardplots (`plot()`) und  [ggplot2](http://ggplot2.org/)
 * [htmlwidgets](http://www.htmlwidgets.org/) JavaScript Visualisierungsbibliotheken
@@ -602,6 +602,19 @@ shinyApp(ui = ui, server = server)
 
 ## Interaktive Plots mit basic plots und ggplot2 {.smaller}
 
+Innerhalb der `renderPlot()` Funktion können folgende Argumente *mouse-based* Interaktionen zur Verfügung stellen:
+
+Argument  | Aktion
+------------- | -------------
+`click = "mouse_event_id"`  | Plot sendet Koordinaten zum Server bei einfachem Mausklick
+`dblclick  = "mouse_event_id"` | Plot sendet Koordinaten zum Server bei doppeltem Mausklick
+`hover  = "mouse_event_id"` | Plot sendet Koordinaten zum Server bei Maushover
+`brush = "mouse_event_id"` | Plot sendet Koordinaten des gezeichneten Rechteckes (`xmin`, `xmax`, `ymin`, and `ymax`) an Server
+
+Die Koordinaten werden an den Server über `input$mouse_event_id` übergeben.
+
+## Interaktive Plots mit basic plots und ggplot2 {.smaller}
+
 ```{r chunck_20, eval=FALSE, echo=TRUE, results='markup'}
 library(shiny)
 library(plotly)
@@ -618,7 +631,9 @@ ui <- fluidPage(
               choices = colnames(iris), 
               selected = colnames(iris)[2], 
               multiple = FALSE),
-  plotlyOutput(outputId = "iris_scatterplot")
+  plotOutput(outputId = "iris_scatterplot",
+             click = "plot_click"),
+  verbatimTextOutput("info_plot")
 )
 # Define server logic
 server <- function(input, output) {
@@ -626,13 +641,42 @@ server <- function(input, output) {
     p <- ggplot(data = iris, aes_string(x = input$input_x_variable,
                                         y = input$input_y_variable))
     p + geom_point(aes(color = Species))
-  })
+    })
+   
+    output$info_plot <- renderText({
+      paste0("x=", input$plot_click$x, "\ny=", input$plot_click$y)
+      })
 }
 # Run the application 
 shinyApp(ui = ui, server = server)
 ```
 
 # Bereitstellung der Shiny Applikation
+
+## Bereitstellung der Shiny Applikation {.smaller}
+
+Es bestehen mehrere Möglichkeiten Shiny Apps zur Verfügung zu stellen:
+
+* [shinyapps.io](https://www.shinyapps.io/) - Dienstleistungsplattform um Shiny Apps zu verwalten und speichern
+* [Shiny server](https://www.rstudio.com/products/shiny/shiny-server/) - Aufbau eines Webservers zur internen und externen Publikation
+* [lokal](https://shiny.rstudio.com/articles/deployment-local.html)
+* [als Funktion](https://shiny.rstudio.com/articles/function.html):
+
+
+```{r chunck_21, eval=FALSE, echo=TRUE, results='markup'}
+beispiel_funktion <- function(var) {
+  require(shiny)
+  shinyApp(
+    ui = fluidPage(plotOutput("hist")),
+    server = function(input, output) {
+      output$hist <- renderPlot( 
+        hist(var, col = "skyblue", border = "white") 
+      )
+    })
+}
+beispiel_funktion(faithful$eruptions)
+```
+
 
 # Erweiterungen
 

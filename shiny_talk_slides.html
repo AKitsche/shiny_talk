@@ -456,7 +456,7 @@ shinyApp(ui = ui, server = server)</pre>
 
 </article></slide><slide class=''><hgroup><h2>Was ist Reaktivität?</h2></hgroup><article  id="was-ist-reaktivitat">
 
-<p>Shiny Applikationen beruhen im weitestgehend auf die zur Verfügungstellung von <em>input</em> Werten, Bereitstellung dieser in <em>R</em> und Rücksendung der evaluierten R Objekte als <em>output</em> zur Webseite.</p>
+<p>Shiny Applikationen beruhen weitestgehend auf die Zurverfügungstellung von <em>input</em> Werten, Bereitstellung dieser in <em>R</em> und Rücksendung der evaluierten R Objekte als <em>output</em> zur Webseite.</p>
 
 <pre >input values =&gt; R Code =&gt; output values</pre>
 
@@ -472,7 +472,7 @@ shinyApp(ui = ui, server = server)</pre>
 
 <img src='data:image/png;base64,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' title='fig:'/>
 
-<p>Ein <em>input</em> Objekt kann mit mehreren <em>output</em> Objekten verbundensein und umgekehrt.</p>
+<p>Ein <em>input</em> Objekt kann mit mehreren <em>output</em> Objekten verbunden sein und umgekehrt.</p>
 
 </article></slide><slide class=''><hgroup><h2></h2></hgroup><article  id="section-1">
 
@@ -579,7 +579,7 @@ shinyApp(ui = ui, server = server)</pre>
 <td align="left">Paragraf</td>
 </tr>
 <tr class="odd">
-<td align="left">strog()</td>
+<td align="left">strong()</td>
 <td align="left">fett</td>
 </tr>
 </table>
@@ -588,7 +588,7 @@ shinyApp(ui = ui, server = server)</pre>
 
 </article></slide><slide class=''><hgroup><h2>Organisation der <em>UI</em> Elemente</h2></hgroup><article  id="organisation-der-ui-elemente" class="smaller">
 
-<p>Vordefinierte <a href='http://shiny.rstudio.com/articles/layout-guide.html' title=''>Layout Funktionen</a> ermöglichen die Organisation der <em>UI</em> Elemente. Wir verwenden Panels um Gruppen con <em>UI</em> Elementen zu bilden.</p>
+<p>Vordefinierte <a href='http://shiny.rstudio.com/articles/layout-guide.html' title=''>Layout Funktionen</a> ermöglichen die Organisation der <em>UI</em> Elemente. Wir verwenden Panels um Gruppen von <em>UI</em> Elementen zu bilden.</p>
 
 <pre class = 'prettyprint lang-r'>library(shiny)
 # Define UI for application
@@ -648,7 +648,7 @@ shinyApp(ui = ui, server = server)</pre>
 
 </article></slide><slide class=''><hgroup><h2>Organisation der <em>UI</em> Elemente</h2></hgroup><article  id="organisation-der-ui-elemente-2" class="smaller">
 
-<p>Eine Erweiterung zu den standard Shiny_layoutimplementierungen bietet das Paket <code>shinydashboard</code> an:</p>
+<p>Eine Erweiterung zu den standard Shiny-Layoutimplementierungen bietet das Paket <code>shinydashboard</code> an:</p>
 
 <pre class = 'prettyprint lang-r'>library(shiny)
 library(shinydashboard)
@@ -669,7 +669,7 @@ shinyApp(ui, server)</pre>
 
 <p>Interaktive Grafiken ermöglichen es zusätzliche Information zu Datenpunkten zur Verfügung zu stellen (mouse hover), Datenpunkte zu selektieren, oder Hyperlinks an Datenpunkte zu binden.</p>
 
-<p>Es stehen mehrere Ebenen zur Implementierung der interaktiver Grafiken zur Verfügung:</p>
+<p>Es stehen mehrere Ebenen zur Implementierung interaktiver Grafiken zur Verfügung:</p>
 
 <ul>
 <li>Shinys eingebaute Funktionalität für R Standardplots (<code>plot()</code>) und <a href='http://ggplot2.org/' title=''>ggplot2</a></li>
@@ -709,6 +709,37 @@ shinyApp(ui = ui, server = server)</pre>
 
 </article></slide><slide class=''><hgroup><h2>Interaktive Plots mit basic plots und ggplot2</h2></hgroup><article  id="interaktive-plots-mit-basic-plots-und-ggplot2" class="smaller">
 
+<p>Innerhalb der <code>renderPlot()</code> Funktion können folgende Argumente <em>mouse-based</em> Interaktionen zur Verfügung stellen:</p>
+
+<table class = 'rmdtable'>
+<col width="19%" />
+<col width="19%" />
+<tr class="header">
+<th align="left">Argument</th>
+<th align="left">Aktion</th>
+</tr>
+<tr class="odd">
+<td align="left"><code>click = &quot;mouse_event_id&quot;</code></td>
+<td align="left">Plot sendet Koordinaten zum Server bei einfachem Mausklick</td>
+</tr>
+<tr class="even">
+<td align="left"><code>dblclick  = &quot;mouse_event_id&quot;</code></td>
+<td align="left">Plot sendet Koordinaten zum Server bei doppeltem Mausklick</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>hover  = &quot;mouse_event_id&quot;</code></td>
+<td align="left">Plot sendet Koordinaten zum Server bei Maushover</td>
+</tr>
+<tr class="even">
+<td align="left"><code>brush = &quot;mouse_event_id&quot;</code></td>
+<td align="left">Plot sendet Koordinaten des gezeichneten Rechteckes (<code>xmin</code>, <code>xmax</code>, <code>ymin</code>, and <code>ymax</code>) an Server</td>
+</tr>
+</table>
+
+<p>Die Koordinaten werden an den Server über <code>input$mouse_event_id</code> übergeben.</p>
+
+</article></slide><slide class=''><hgroup><h2>Interaktive Plots mit basic plots und ggplot2</h2></hgroup><article  id="interaktive-plots-mit-basic-plots-und-ggplot2-1" class="smaller">
+
 <pre class = 'prettyprint lang-r'>library(shiny)
 library(plotly)
 # Define UI for application
@@ -724,7 +755,9 @@ ui &lt;- fluidPage(
               choices = colnames(iris), 
               selected = colnames(iris)[2], 
               multiple = FALSE),
-  plotlyOutput(outputId = &quot;iris_scatterplot&quot;)
+  plotOutput(outputId = &quot;iris_scatterplot&quot;,
+             click = &quot;plot_click&quot;),
+  verbatimTextOutput(&quot;info_plot&quot;)
 )
 # Define server logic
 server &lt;- function(input, output) {
@@ -732,12 +765,39 @@ server &lt;- function(input, output) {
     p &lt;- ggplot(data = iris, aes_string(x = input$input_x_variable,
                                         y = input$input_y_variable))
     p + geom_point(aes(color = Species))
-  })
+    })
+   
+    output$info_plot &lt;- renderText({
+      paste0(&quot;x=&quot;, input$plot_click$x, &quot;\ny=&quot;, input$plot_click$y)
+      })
 }
 # Run the application 
 shinyApp(ui = ui, server = server)</pre>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Bereitstellung der Shiny Applikation</h2></hgroup><article  id="bereitstellung-der-shiny-applikation">
+
+</article></slide><slide class=''><hgroup><h2>Bereitstellung der Shiny Applikation</h2></hgroup><article  id="bereitstellung-der-shiny-applikation-1" class="smaller">
+
+<p>Es bestehen mehrere Möglichkeiten Shiny Apps zur Verfügung zu stellen:</p>
+
+<ul>
+<li><a href='https://www.shinyapps.io/' title=''>shinyapps.io</a> - Dienstleistungsplattform um Shiny Apps zu verwalten und speichern</li>
+<li><a href='https://www.rstudio.com/products/shiny/shiny-server/' title=''>Shiny server</a> - Aufbau eines Webservers zur internen und externen Publikation</li>
+<li><a href='https://shiny.rstudio.com/articles/deployment-local.html' title=''>lokal</a></li>
+<li><a href='https://shiny.rstudio.com/articles/function.html' title=''>als Funktion</a>:</li>
+</ul>
+
+<pre class = 'prettyprint lang-r'>beispiel_funktion &lt;- function(var) {
+  require(shiny)
+  shinyApp(
+    ui = fluidPage(plotOutput(&quot;hist&quot;)),
+    server = function(input, output) {
+      output$hist &lt;- renderPlot( 
+        hist(var, col = &quot;skyblue&quot;, border = &quot;white&quot;) 
+      )
+    })
+}
+beispiel_funktion(faithful$eruptions)</pre>
 
 </article></slide><slide class='segue dark nobackground level1'><hgroup class = 'auto-fadein'><h2>Erweiterungen</h2></hgroup><article  id="erweiterungen">
 
