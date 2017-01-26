@@ -224,7 +224,7 @@ renderUI()   | Shiny UI Element
 innerhalb der `render*()` Funktion befindet sich der Code zur Erstellung des Objektes
 
 
-## Eingabewerten werden mit `input$` angesteuert {.smaller}
+## Eingabewerte werden mit `input$` angesteuert {.smaller}
 
 ```{r chunck_10, eval=FALSE, echo=TRUE, results='markup'}
 library(shiny)
@@ -695,7 +695,7 @@ Weiterhin besteht die Möglichkeit:
     + *ioslides* Präsentation
     + *html* Dukumentation
 
-## References
+## Referenzen
 
 * Chang, Winston, Joe Cheng, JJ Allaire, Yihui Xie, and Jonathan
 McPherson. 2016. Shiny: Web Application Framework
